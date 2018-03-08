@@ -200,6 +200,7 @@ function submit(){
     console.log(out);
 
     //Download Json
+    $("#container").empty();
     var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(out));
     $('<a href="data:' + data + '" download="shadoParams.json">download input JSON</a>').appendTo('#container');
 

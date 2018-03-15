@@ -89,8 +89,12 @@
           <div class ="task_option"></div>
         </div>
 
-            <p style="border: inherit">Reminder: This form loosely sanitize the parameters, check before submit </p>
+            <p style="border: inherit">Reminder:  Parameters in his form is loosely sanitized, check before submit </p>
              <div id="container"></div><br>
-            <button id="test" style="font-size: larger" class=" pure-button pure-button-primary" title="" onclick="submit()">Submit</button><br><br>
+        <div id="downloadBtn" style="display: none">
+            <button id="downloadCSV" style="font-size: larger" class=" pure-button" title="" onclick="downloadRepCSV()">Download CSV</button>
+            <button id="downloadSummary" style="font-size: larger" class=" pure-button" title="" onclick="downloadSummary()">Download Summary</button>
+        </div><br>
+            <button id="sumbitBtn" style="font-size: larger" class=" pure-button pure-button-primary" title="" onclick="submit()">Submit</button><br><br>
     </body>
 </html>

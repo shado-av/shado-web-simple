@@ -4,11 +4,11 @@ var total_num_exo = 0;
 var total_num_task= 0;
 var num_phases = 2;
 var operator_names=["Dispatcher","Operations Management Specialist","Artificially Intelligent Agent"];
-var task_names = ["Communicating","Actuation","Directive_Mandatory","Directive_Courtesy_1","Directive_Courtesy_2","Record Keeping","Referencing"];
+var task_names = ["Communicating","Actuation","Directive_Mandatory","Directive_Courtesy_1","Directive_Courtesy_2","Record Keeping","Referencing","Internal Communication"];
 var priorities = [[4,7],[5,5],[2,5],[5,3],[3,4],[3,2],[3,4],[3,2],[3,1]];
 var exo_factor_names =["Medical","Weather","Medical","Weather","Medical","Weather"];
 var exo_factor_types =["add_task","long_serv","add_task","long_serv","add_task","long_serv"];
-var arrival_param = [[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],];
+var arrival_param = [[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1],[0.033333,0.1]];
 var service_param = [[0.5,2],[0.5,2],[0.5,2],[0.5,2],[0.5,2],[0.5,2],[0.5,2],[0.5,2],[0.5,2],[0.5,2]];
 var expire_param = [[0,0.184],[0,0.184],[0,0.184],[0,0.184],[0,0.184],[0,0.184],[0,0.184],[0,0.184],[0,0.184]];
 var expire_param_exo = [[0,0.184],[0,0.184],[0,0.184],[0,0.184],[0,0.184],[0,0.184],[0,0.184],[0,0.184],[0,0.184]];
@@ -65,7 +65,7 @@ function submit(){
         alert("Please Choose Number of Teams");
         return;
     }
-    if(parseInt(document.getElementById("num_exo").value) == 0 ){
+    if(parseInt(document.getElementById("num_exo").value) < 0 ){
         alert("Please Choose Number of Exogenous Factor");
         return;
     }
@@ -85,6 +85,9 @@ function submit(){
             exo_name.push(document.getElementById("exo_type_name_"+i).value);
             exo_type.push(document.getElementById("exo_type_"+i).value);
         }
+    }
+    else{
+        has_exo = [0,0];
     }
     var traffic = [];
     var num_hours = parseInt( document.getElementById("num_hours").value);
@@ -199,6 +202,9 @@ function submit(){
     };
 
     console.log(out);
+    //hide download
+    document.getElementById("downloadBtn").style.display = "none";
+    // document.getElementById("downloadSummary").style.display = "none";
 
     //Download Json
     $("#container").empty();
@@ -207,7 +213,7 @@ function submit(){
 
   $.ajax({
       type: "POST",
-      url: "http://apps.hal.pratt.duke.edu:8080/shado/testpost",
+      url: "http://localhost:8080/shado/testpost",
       // The key needs to match your method's input parameter (case-sensitive).
       data: JSON.stringify(out),
       contentType: "application/json; charset=utf-8",
@@ -231,8 +237,18 @@ function submit(){
           var obj = JSON.stringify(msg);
           if(msg.status == 500){
               alert("Server Error: Check parameters(maybe not enough tasks)!")
+              alert(msg.responseText);
           }
-          alert(msg.responseText);
+          if(msg.status == 200){
+              alert(msg.responseText);
+              //Allow Download
+              //Show download button
+              showDownloadBtn();
+              // downloadRepCSV();
+              // downloadSummary();
+          }
+          document.getElementById("sumbitBtn").textContent = "Submit Again";
+
       },
       failure: function(errMsg) {
           alert(errMsg);
@@ -273,7 +289,7 @@ function popTeamTypes(){
     "<input class='team_type'id='team_name_"+i+"' value='"+operator_names[i]+"' placeholder='"+operator_names[i]+"'></input>"+
     "<label class='team_type'id='lbl_team_"+i+"' value =''> Tasks </label> "+
     " <input class='team_type'id='team_type_"+i+"' value='0,1,2' placeholder='0,1,2'></input>"+
-    "   <lable class='team_type'id='lbl_team_size"+i+"' value =''>   size </label> "+
+    "   <label class='team_type'id='lbl_team_size"+i+"' value =''>   size </label> "+
     "<input class='team_type'id='team_type_size_"+i+"' value='2'placeholder='2'></input>"+
     "  <select class='team_type'id='select_team_comm_"+i+"'> "+
     "<option class='team_type' disabled hidden>Choose Team Communication</option>"+
@@ -299,42 +315,62 @@ function popExoFactor(){
   for(var i = 0; i < total_num_exo; i++){
     $( ".exo_option" ).append( "<label class='exo_type'id='lbl_exo_"+i+"' value ='Exogenous Factor Type"+i+"'>Exo Type"+i+"'s Name </label> "+
     " <input class='exo_type'class='exo_type'class='exo_type'id='exo_type_name_"+i+"' value='"+exo_factor_names[i]+"' placeholder='"+exo_factor_names[i]+"'></input>"+
-    "   <lable class='exo_type'class='exo_type'id='lbl_exo_size"+i+"' value =''>   type </label> "+
+    "   <label class='exo_type'class='exo_type'id='lbl_exo_size"+i+"' value =''>   type </label> "+
     "<input class='exo_type'id='exo_type_"+i+"' value='"+exo_factor_types[i]+"'placeholder='"+exo_factor_types[i]+"'></input><br><br>");
   }
 }
 
-function popTask(){
-  var num_task = document.getElementById("num_task");
-  var selected_num_task = num_task.options[num_task.selectedIndex].value;
-  if(total_num_task!=0)
-    $('.task_type').remove();
-  total_num_task = selected_num_task;
-  for(var i = 0; i < total_num_task; i++){
-    $( ".task_option" ).append( "<label class='task_type'id='lbl_name_"+i+"' value ='Exogenous Factor Type"+i+"'>Name </label> "+
-    "<input class = 'task_type' id='txt_task_name_"+i+"' value='"+task_names[i]+"'placeholder='"+task_names[i]+"'></input>"+
-    "<lable class = 'task_type'id='lbl_priority_"+i+"' value ='Exogenous Factor Type"+i+"'>Priority </label> "+
-    "<input class = 'task_type' id='txt_priority_"+i+"' size = '4' value='"+priorities[i]+"' placeholder='"+priorities[i]+"'></input>"+
-    "<lable class = 'task_type'id='lbl_arr_pm_dist_"+i+"' value ='Arrival Dist"+i+"'>Arrival Dist </label>"+
-    "<input class = 'task_type' id='txt_arr_pm_dist_"+i+"' size = '3'value='E' placeholder='E'></input>"+
-    "<lable class = 'task_type'id='lbl_serv_pm_dist_"+i+"' value ='Service Dist"+i+"'>Service Dist </label>"+
-    "<input class = 'task_type' id='txt_serv_pm_dist_"+i+"'size = '3' value='U' placeholder='U'></input>"+
-    "<lable class = 'task_type'id='lbl_exp_pm_dist_"+i+"' value ='Expire Dist"+i+"'>Expire Dist </label>"+
-    "<input class = 'task_type'id='txt_exp_pm_dist_"+i+"' size = '3'value='E' placeholder='E'></input><br><br>"+
-    "<lable class = 'task_type'id='lbl_arr_pm_"+i+"' value =''>Arrival Param </label> "+
-    "<input class = 'task_type'id='txt_arr_pm_"+i+"'  value='"+arrival_param[i]+"' placeholder='"+arrival_param[i]+"'></input>"+
-    "<lable class = 'task_type'id='lbl_serv_pm_"+i+"' value =''>Service Param </label> "+
-    "<input class = 'task_type'id='txt_serv_pm_"+i+"'  value='"+service_param[i]+"' placeholder='"+service_param[i]+"'></input>"+
-    "<lable class = 'task_type'id='lbl_expire_pm_default_"+i+"' value =''>Expire Param Default </label> "+
-    "<input class = 'task_type'id='txt_expire_pm_default"+i+"'  value='"+expire_param[i]+"' placeholder='"+expire_param[i]+"'></input>"+
-    "<lable class = 'task_type'id='lbl_expire_pm_exo_"+i+"' value =''>Expire Param High Traffic</label> "+
-    "<input class = 'task_type'id='txt_expire_pm_exo_"+i+"'  value='"+expire_param_exo[i]+"' placeholder='"+expire_param_exo[i]+"'></input><br><br>"+
-    "<lable class = 'task_type'id='lbl_affect_by_IROP_"+i+"' value =''>Affected By IROPS</label> "+
-    "<input class = 'task_type'id='txt_affect_by_IROP_"+i+"' size='5' value='"+affect_by_IROPS[i]+"' placeholder='"+affect_by_IROPS[i]+"'></input>"+
-    "<lable class = 'task_type'id='lbl_human_err_"+i+"' value =''>Human Error Probability</label> "+
-    "<input class = 'task_type'id='txt_human_err_"+i+"' value='"+human_error_prob[i]+"' placeholder='"+human_error_prob[i]+"'></input>"+
-        "<lable class = 'task_type'id='lbl_affect_by_team_"+i+"' value =''>Affected by Team Coordination (1 means yes; 0 means No)</label> "+
-        "<input class = 'task_type'id='txt_affect_by_team_"+i+"'size = '3' value='"+affect_by_team[i]+"' placeholder='"+affect_by_team[i]+"'></input>"+
-    "<br><br>----------------------------------------------------------------------------------------------------------------------------------------------------<br><br>");
-  }
+function popTask() {
+    var num_task = document.getElementById("num_task");
+    var selected_num_task = num_task.options[num_task.selectedIndex].value;
+    if (total_num_task != 0)
+        $('.task_type').remove();
+    total_num_task = selected_num_task;
+    for (var i = 0; i < total_num_task; i++) {
+        $(".task_option").append("<label class='task_type'id='lbl_name_" + i + "' value ='Exogenous Factor Type" + i + "'>Name </label> " +
+            "<input class = 'task_type' id='txt_task_name_" + i + "' value='" + task_names[i] + "'placeholder='" + task_names[i] + "'></input>" +
+            "<label class = 'task_type'id='lbl_priority_" + i + "' value ='Exogenous Factor Type" + i + "'>Priority </label> " +
+            "<input class = 'task_type' id='txt_priority_" + i + "' size = '4' value='" + priorities[i] + "' placeholder='" + priorities[i] + "'></input>" +
+            "<label class = 'task_type'id='lbl_arr_pm_dist_" + i + "' value ='Arrival Dist" + i + "'>Arrival Dist </label>" +
+            "<input class = 'task_type' id='txt_arr_pm_dist_" + i + "' size = '3'value='E' placeholder='E'></input>" +
+            "<label class = 'task_type'id='lbl_serv_pm_dist_" + i + "' value ='Service Dist" + i + "'>Service Dist </label>" +
+            "<input class = 'task_type' id='txt_serv_pm_dist_" + i + "'size = '3' value='U' placeholder='U'></input>" +
+            "<label class = 'task_type'id='lbl_exp_pm_dist_" + i + "' value ='Expire Dist" + i + "'>Expire Dist </label>" +
+            "<input class = 'task_type'id='txt_exp_pm_dist_" + i + "' size = '3'value='E' placeholder='E'></input><br><br>" +
+            "<label class = 'task_type'id='lbl_arr_pm_" + i + "' value =''>Arrival Param </label> " +
+            "<input class = 'task_type'id='txt_arr_pm_" + i + "'  value='" + arrival_param[i] + "' placeholder='" + arrival_param[i] + "'></input>" +
+            "<label class = 'task_type'id='lbl_serv_pm_" + i + "' value =''>Service Param </label> " +
+            "<input class = 'task_type'id='txt_serv_pm_" + i + "'  value='" + service_param[i] + "' placeholder='" + service_param[i] + "'></input>" +
+            "<label class = 'task_type'id='lbl_expire_pm_default_" + i + "' value =''>Expire Param Default </label> " +
+            "<input class = 'task_type'id='txt_expire_pm_default" + i + "'  value='" + expire_param[i] + "' placeholder='" + expire_param[i] + "'></input>" +
+            "<label class = 'task_type'id='lbl_expire_pm_exo_" + i + "' value =''>Expire Param High Traffic</label> " +
+            "<input class = 'task_type'id='txt_expire_pm_exo_" + i + "'  value='" + expire_param_exo[i] + "' placeholder='" + expire_param_exo[i] + "'></input><br><br>" +
+            "<label class = 'task_type'id='lbl_affect_by_IROP_" + i + "' value =''>Affected By IROPS</label> " +
+            "<input class = 'task_type'id='txt_affect_by_IROP_" + i + "' size='5' value='" + affect_by_IROPS[i] + "' placeholder='" + affect_by_IROPS[i] + "'></input>" +
+            "<label class = 'task_type'id='lbl_human_err_" + i + "' value =''>Human Error Probability</label> " +
+            "<input class = 'task_type'id='txt_human_err_" + i + "' value='" + human_error_prob[i] + "' placeholder='" + human_error_prob[i] + "'></input>" +
+            "<label class = 'task_type'id='lbl_affect_by_team_" + i + "' value =''>Affected by Team Coordination (1 means yes; 0 means No)</label> " +
+            "<input class = 'task_type'id='txt_affect_by_team_" + i + "'size = '3' value='" + affect_by_team[i] + "' placeholder='" + affect_by_team[i] + "'></input>" +
+            "<br><br>----------------------------------------------------------------------------------------------------------------------------------------------------<br><br>");
+    }
 }
+function showDownloadBtn() {
+    document.getElementById("downloadBtn").style.display = "block";
+    // document.getElementById("downloadSummary").style.display = "block";
+}
+function downloadRepCSV() {
+    // $.get("http://localhost:8080/shado/getRepDetail");
+    var win = window.open("http://localhost:8080/shado/getRepDetail", '_blank');
+    win.focus();
+    console.log("GET request 'getRepDetail' sent");
+}
+
+function downloadSummary(){
+    var xhttp = new XMLHttpRequest();
+    // $.get("http://localhost:8080/shado/getSummary");
+    // xhttp.open("GET", "http://localhost:8080/shado/getSummary", true);
+    var win = window.open("http://localhost:8080/shado/getSummary", '_blank');
+    win.focus();
+    console.log("GET request 'getSummary' sent");
+}
+

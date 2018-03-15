@@ -213,7 +213,7 @@ function submit(){
 
   $.ajax({
       type: "POST",
-      url: "http://localhost:8080/shado/testpost",
+      url: "http://apps.hal.pratt.duke.edu:8080/shado/testpost",
       // The key needs to match your method's input parameter (case-sensitive).
       data: JSON.stringify(out),
       contentType: "application/json; charset=utf-8",
@@ -360,7 +360,7 @@ function showDownloadBtn() {
 }
 function downloadRepCSV() {
     // $.get("http://localhost:8080/shado/getRepDetail");
-    var win = window.open("http://localhost:8080/shado/getRepDetail", '_blank');
+    var win = window.open("http://apps.hal.pratt.duke.edu:8080/shado/getRepDetail", '_blank');
     win.focus();
     console.log("GET request 'getRepDetail' sent");
 }
@@ -369,7 +369,7 @@ function downloadSummary(){
     var xhttp = new XMLHttpRequest();
     // $.get("http://localhost:8080/shado/getSummary");
     // xhttp.open("GET", "http://localhost:8080/shado/getSummary", true);
-    var win = window.open("http://localhost:8080/shado/getSummary", '_blank');
+    var win = window.open("http://apps.hal.pratt.duke.edu:8080/shado/getSummary", '_blank');
     win.focus();
     console.log("GET request 'getSummary' sent");
 }

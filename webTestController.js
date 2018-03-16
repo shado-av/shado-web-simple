@@ -73,6 +73,7 @@ function submit(){
         alert("Please Choose Number of Task");
         return;
     }
+    showProgress();
     var num_teams = parseInt(document.getElementById("num_teams").value);
     var num_exo = parseInt(document.getElementById("num_exo").value);
     var exo_name = [];
@@ -235,6 +236,7 @@ function submit(){
           console.log("response received");
           console.log(msg);
           var obj = JSON.stringify(msg);
+
           if(msg.status == 500){
               alert("Server Error: Check parameters(maybe not enough tasks)!")
               alert(msg.responseText);
@@ -247,6 +249,7 @@ function submit(){
               // downloadRepCSV();
               // downloadSummary();
           }
+          hideProgress();
           document.getElementById("sumbitBtn").textContent = "Submit Again";
 
       },
@@ -300,7 +303,7 @@ function popTeamTypes(){
     "<option  disabled hidden>Choose Team Strategy</option>"+
     "<option value='N' selected>FIFO</option> "+
     "<option value='L'>Shortest Tast First</option>"+
-    "<option value='F'>Priority</option> </select><br><br>");
+    "<option value='F'>Priority</option> </select><br class='team_type'><br class='team_type'>");
 }
 }
 
@@ -316,15 +319,15 @@ function popExoFactor(){
     $( ".exo_option" ).append( "<label class='exo_type'id='lbl_exo_"+i+"' value ='Exogenous Factor Type"+i+"'>Exo Type"+i+"'s Name </label> "+
     " <input class='exo_type'class='exo_type'class='exo_type'id='exo_type_name_"+i+"' value='"+exo_factor_names[i]+"' placeholder='"+exo_factor_names[i]+"'></input>"+
     "   <label class='exo_type'class='exo_type'id='lbl_exo_size"+i+"' value =''>   type </label> "+
-    "<input class='exo_type'id='exo_type_"+i+"' value='"+exo_factor_types[i]+"'placeholder='"+exo_factor_types[i]+"'></input><br><br>");
+    "<input class='exo_type'id='exo_type_"+i+"' value='"+exo_factor_types[i]+"'placeholder='"+exo_factor_types[i]+"'></input><br class ='exo_type'><br class ='exo_type'>");
   }
 }
 
 function popTask() {
     var num_task = document.getElementById("num_task");
     var selected_num_task = num_task.options[num_task.selectedIndex].value;
-    if (total_num_task != 0)
-        $('.task_type').remove();
+    // if (total_num_task != 0)
+    $('.task_type').remove();
     total_num_task = selected_num_task;
     for (var i = 0; i < total_num_task; i++) {
         $(".task_option").append("<label class='task_type'id='lbl_name_" + i + "' value ='Exogenous Factor Type" + i + "'>Name </label> " +
@@ -336,7 +339,7 @@ function popTask() {
             "<label class = 'task_type'id='lbl_serv_pm_dist_" + i + "' value ='Service Dist" + i + "'>Service Dist </label>" +
             "<input class = 'task_type' id='txt_serv_pm_dist_" + i + "'size = '3' value='U' placeholder='U'></input>" +
             "<label class = 'task_type'id='lbl_exp_pm_dist_" + i + "' value ='Expire Dist" + i + "'>Expire Dist </label>" +
-            "<input class = 'task_type'id='txt_exp_pm_dist_" + i + "' size = '3'value='E' placeholder='E'></input><br><br>" +
+            "<input class = 'task_type'id='txt_exp_pm_dist_" + i + "' size = '3'value='E' placeholder='E'></input><br class ='task_type'><br class ='task_type'>" +
             "<label class = 'task_type'id='lbl_arr_pm_" + i + "' value =''>Arrival Param </label> " +
             "<input class = 'task_type'id='txt_arr_pm_" + i + "'  value='" + arrival_param[i] + "' placeholder='" + arrival_param[i] + "'></input>" +
             "<label class = 'task_type'id='lbl_serv_pm_" + i + "' value =''>Service Param </label> " +
@@ -344,14 +347,15 @@ function popTask() {
             "<label class = 'task_type'id='lbl_expire_pm_default_" + i + "' value =''>Expire Param Default </label> " +
             "<input class = 'task_type'id='txt_expire_pm_default" + i + "'  value='" + expire_param[i] + "' placeholder='" + expire_param[i] + "'></input>" +
             "<label class = 'task_type'id='lbl_expire_pm_exo_" + i + "' value =''>Expire Param High Traffic</label> " +
-            "<input class = 'task_type'id='txt_expire_pm_exo_" + i + "'  value='" + expire_param_exo[i] + "' placeholder='" + expire_param_exo[i] + "'></input><br><br>" +
+            "<input class = 'task_type'id='txt_expire_pm_exo_" + i + "'  value='" + expire_param_exo[i] + "' placeholder='" + expire_param_exo[i] + "'></input><br class ='task_type'><br class ='task_type'>" +
             "<label class = 'task_type'id='lbl_affect_by_IROP_" + i + "' value =''>Affected By IROPS</label> " +
             "<input class = 'task_type'id='txt_affect_by_IROP_" + i + "' size='5' value='" + affect_by_IROPS[i] + "' placeholder='" + affect_by_IROPS[i] + "'></input>" +
             "<label class = 'task_type'id='lbl_human_err_" + i + "' value =''>Human Error Probability</label> " +
             "<input class = 'task_type'id='txt_human_err_" + i + "' value='" + human_error_prob[i] + "' placeholder='" + human_error_prob[i] + "'></input>" +
             "<label class = 'task_type'id='lbl_affect_by_team_" + i + "' value =''>Affected by Team Coordination (1 means yes; 0 means No)</label> " +
             "<input class = 'task_type'id='txt_affect_by_team_" + i + "'size = '3' value='" + affect_by_team[i] + "' placeholder='" + affect_by_team[i] + "'></input>" +
-            "<br><br>----------------------------------------------------------------------------------------------------------------------------------------------------<br><br>");
+            "<br class ='task_type'><br class ='task_type'> <label class ='task_type'>----------------------------------------------------------------------------------------------------------------------------------------------------" +
+            "</label><br class ='task_type'><br class='task_type'>");
     }
 }
 function showDownloadBtn() {
@@ -373,4 +377,10 @@ function downloadSummary(){
     win.focus();
     console.log("GET request 'getSummary' sent");
 }
+function showProgress() {
+    document.getElementById("progress").style.display = 'block';
+}
+function hideProgress() {
+    document.getElementById("progress").style.display = 'none';
 
+}

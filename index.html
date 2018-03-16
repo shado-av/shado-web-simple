@@ -4,6 +4,29 @@
         <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script type="text/javascript" src="webTestController.js" ></script>
+        <style>
+            .loader {
+
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #3498db;
+                width: 120px;
+                height: 120px;
+                -webkit-animation: spin 2s linear infinite; /* Safari */
+                animation: spin 2s linear infinite;
+            }
+
+            /* Safari */
+            @-webkit-keyframes spin {
+                0% { -webkit-transform: rotate(0deg); }
+                100% { -webkit-transform: rotate(360deg); }
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
         <title>SHADO Request Test</title>
     <body style="text-align: center">
 
@@ -46,6 +69,7 @@
           <h3 id="header_fleet_type" hidden>Fleet Type Details</h3>
             <div class="fleet_option"></div>
         </div>
+
         <div id="team_div">
           <h2> Team Parameters</h2>
           <label value = "Number of Hours">Number of Teams</label>
@@ -55,9 +79,9 @@
             <option value="2">2</option>
             <option value="3">3</option>
           </select><br><br>
-
-            <div class="team_option"></div><br>
+            <div class="team_option"></div>
         </div>
+
         <div id="exogenous_factor_div">
             <h2> Exogenous Factor Parameters</h2>
           <label value ="Number of Hours">Number of exogenous Factor</label>
@@ -68,7 +92,7 @@
             <option value="3">3</option>
             <option value="4">4</option>
           </select><br><br>
-          <div class="exo_option"></div><br>
+          <div class="exo_option"></div>
         </div>
         <div>
           <h2> Task Parameters</h2>
@@ -85,16 +109,18 @@
             <option value="8">8</option>
             <option value="9">9</option>
           </select><br><br>
-
           <div class ="task_option"></div>
         </div>
 
             <p style="border: inherit">Reminder:  Parameters in his form is loosely sanitized, check before submit </p>
              <div id="container"></div><br>
+
         <div id="downloadBtn" style="display: none">
             <button id="downloadCSV" style="font-size: larger" class=" pure-button" title="" onclick="downloadRepCSV()">Download CSV</button>
             <button id="downloadSummary" style="font-size: larger" class=" pure-button" title="" onclick="downloadSummary()">Download Summary</button>
         </div><br>
-            <button id="sumbitBtn" style="font-size: larger" class=" pure-button pure-button-primary" title="" onclick="submit()">Submit</button><br><br>
+        <div style=" text-align: center; margin-left :45% ; display:none" id="progress" class="loader"></div><br>
+            <button id="sumbitBtn" style="font-size: larger" class=" pure-button pure-button-primary" title="" onclick="submit()">Submit</button>
+        <br><br>
     </body>
 </html>

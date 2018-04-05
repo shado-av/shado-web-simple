@@ -36,7 +36,7 @@
         <label value="Number of Hours">Simulation Type</label>
         <select id="sim_type">
           <option value="aviation">Aviation</option>
-          <option value="railroad">Railroad</option>
+          <option value="railroad" selected>Rail</option>
         </select>  <br><br>
         <label value="Number of Hours">Number of Hours</label>
         <input id="num_hours"type="text" value=8 placeholder="8"></input>  <br><br>
@@ -72,7 +72,7 @@
 
         <div id="team_div">
           <h2> Team Parameters</h2>
-          <label value = "Number of Hours">Number of Teams</label>
+          <label value = "Number of Hours">Number of Desks</label>
           <select id="num_teams" onselect="popTeamTypes()" onchange ="popTeamTypes()">
             <option value="0" selected disabled hidden>Choose here</option>
             <option value="1">1</option>
@@ -89,8 +89,6 @@
             <option value="0" selected disabled hidden>Choose here</option>
             <option value="1">1</option>
             <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
           </select><br><br>
           <div class="exo_option"></div>
         </div>

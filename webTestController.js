@@ -4,7 +4,7 @@ var total_num_exo = 0;
 var total_num_task= 0;
 var num_phases = 2;
 var operator_names=["Dispatcher","Operations Management Specialist","Artificially Intelligent Agent"];
-var task_names = ["Communicating","Actuation","Directive_Mandatory","Directive_Courtesy_1","Directive_Courtesy_2","Record Keeping","Referencing","Internal Communication"];
+var task_names = ["Communicating Internally","Communication","Actuation","Directive_Mandatory","Directive_Courtesy_1","Directive_Courtesy_2","Record Keeping","Referencing","Communication"];
 var priorities = [[4,7],[5,5],[2,5],[5,3],[3,4],[3,2],[3,4],[3,2],[3,1]];
 var exo_factor_names =["Medical","Weather","Medical","Weather","Medical","Weather"];
 var exo_factor_types =["add_task","long_serv","add_task","long_serv","add_task","long_serv"];
@@ -171,7 +171,7 @@ function submit(){
         "numRemoteOp" : num_remote_ops,
         "numTeams": parseInt(document.getElementById("num_teams").value),
         "numvehicles": fleet_size,
-        "autolvl":2,
+        "autolvl":1,
         "numPhases":parseInt(document.getElementById("num_phases").value),
 
         "hasExogenous":has_exo,
@@ -272,9 +272,17 @@ function popFleetTypes(){
   // alert("total_num_fleet"+total_num_fleet);
   for(var i = 0; i < total_num_fleet; i++){
     $( ".fleet_option" ).append( "<label class='fleet_type' id='lbl_fleet_"+i+"' value ='Fleet Type"+i+"'>Fleet Type "+i+"'s Tasks </label> "+
-    " <input class='fleet_type'id='fleet_type_"+i+"' value='0,1,2,3'placeholder='0,1,2,3'></input>"+
-    "   <label class='fleet_type' id='lbl_fleet_size"+i+"' value ='Fleet Type "+i+"'>   size </label> "+
-    "<input class='fleet_type'id='fleet_type_size_"+i+"' value ='2'placeholder='2'></input><br class='fleet_type'><br class='fleet_type'>");
+    " <input class='fleet_type'id='fleet_type_"+i+"' value='0,1,2'placeholder='0,1,2'></input>"+
+    "   <label class='fleet_type' id='lbl_fleet_size"+i+"' value ='Fleet Type "+i+"'>   # of vehicles </label> "+
+    "<input class='fleet_type'id='fleet_type_size_"+i+"' value ='2'placeholder='2'></input>" +
+        "<label class='fleet_type' id='lbl_fleet_auto"+i+"'>Fleet Autonomy</label>"+
+        "  <select class='fleet_type'id='select_fleet_auto_"+i+"'> "+
+        "<option class='fleet_type' disabled hidden>Choose Team Communication</option>"+
+        "<option value=0 >None</option> "+
+        "<option value=1 selected >Some</option>"+
+        "<option value=2>Full</option> </select> <br class='fleet_type'>"
+    );
+
   }
 
 }
@@ -287,24 +295,26 @@ function popTeamTypes(){
     $('.team_type').remove();
   total_num_team = selected_num_teams;
   // alert("total_num_fleet"+total_num_fleet);
-  for(var i = 0; i < total_num_team; i++){
-    $( ".team_option" ).append( "<label class='team_type' id='lbl_team_name_"+i+"' value =''>  Operator Team "+i+"'s Name </label> "+
-    "<input class='team_type'id='team_name_"+i+"' value='"+operator_names[i]+"' placeholder='"+operator_names[i]+"'></input>"+
-    "<label class='team_type'id='lbl_team_"+i+"' value =''> Tasks </label> "+
-    " <input class='team_type'id='team_type_"+i+"' value='0,1,2' placeholder='0,1,2'></input>"+
-    "   <label class='team_type'id='lbl_team_size"+i+"' value =''>   size </label> "+
-    "<input class='team_type'id='team_type_size_"+i+"' value='2'placeholder='2'></input>"+
-    "  <select class='team_type'id='select_team_comm_"+i+"'> "+
-    "<option class='team_type' disabled hidden>Choose Team Communication</option>"+
-    "<option value='N'>None</option> "+
-    "<option value='S'selected >Some</option>"+
-    "<option value='F'>Full</option> </select> "+
-    "<select class='team_type' id='select_team_strat_"+i+"'> "+
-    "<option  disabled hidden>Choose Team Strategy</option>"+
-    "<option value='N' selected>FIFO</option> "+
-    "<option value='L'>Shortest Tast First</option>"+
-    "<option value='F'>Priority</option> </select><br class='team_type'><br class='team_type'>");
-}
+      for(var i = 0; i < total_num_team; i++){
+        $( ".team_option" ).append( "<label class='team_type' id='lbl_team_name_"+i+"' value =''>  Operator Team "+i+"'s Name </label> "+
+        "<input class='team_type'id='team_name_"+i+"' value='"+operator_names[i]+"' placeholder='"+operator_names[i]+"'></input>"+
+        "<label class='team_type'id='lbl_team_"+i+"' value =''> Tasks </label> "+
+        " <input class='team_type'id='team_type_"+i+"' value='0,1,2' placeholder='0,1,2'></input>"+
+        "   <label class='team_type'id='lbl_team_size"+i+"' value =''>   size </label> "+
+        "<input class='team_type'id='team_type_size_"+i+"' value='2'placeholder='2'></input>"+
+            "<label  class='team_type'>Team Comm</label>"+
+        "  <select class='team_type'id='select_team_comm_"+i+"'> "+
+        "<option class='team_type' disabled hidden>Choose Team Communication</option>"+
+        "<option value='N'>None</option> "+
+        "<option value='S'selected >Some</option>"+
+        "<option value='F'>Full</option> </select> "+
+            "<label  class='team_type'>Strategies</label>"+
+        "<select class='team_type' id='select_team_strat_"+i+"'> "+
+        "<option  disabled hidden>Choose Team Strategy</option>"+
+        "<option value='N' selected>FIFO</option> "+
+        "<option value='L'>Shortest Tast First</option>"+
+        "<option value='F'>Priority</option> </select><br class='team_type'><br class='team_type'>");
+    }
 }
 
 

@@ -312,7 +312,7 @@ function popTeamTypes(){
         "<select class='team_type' id='select_team_strat_"+i+"'> "+
         "<option  disabled hidden>Choose Team Strategy</option>"+
         "<option value='N' selected>FIFO</option> "+
-        "<option value='L'>Shortest Tast First</option>"+
+        "<option value='L'>Shortest Task First</option>"+
         "<option value='F'>Priority</option> </select><br class='team_type'><br class='team_type'>");
     }
 }
